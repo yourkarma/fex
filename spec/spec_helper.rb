@@ -1,3 +1,4 @@
+require 'pry-nav'
 require 'support/test_keys'
 require 'fex'
 

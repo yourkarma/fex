@@ -3,27 +3,10 @@ require 'spec_helper'
 describe Fex do
 
   example "Address Validation" do
-    client = Fex.client(test_keys)
-    av = client.validate_address(
-      web_authentication_detail: {
-        user_credential: {
-          key: key,
-          password: password
-        }
-      },
-      client_detail: {
-        account_number: account_number,
-        meter_number: meter_number
-      },
-      transaction_detail: {
-        customer_transaction_id: "WSVC_addressvalidation"
-      },
-      version: {
-        service_id: 'aval',
-        major: 2,
-        intermediate: 0,
-        minor: 0
-      },
+
+    client = Fex.client(credentials: test_keys["production"], mode: "production")
+    service = client.validate_address
+    response = service.call(
       request_timestamp: Time.now.utc.iso8601(2),
       options: {
         check_residential_status: 1,
@@ -41,7 +24,7 @@ describe Fex do
         }
       }
     )
-    av.call
+    response.severity.should eq "SUCCESS"
   end
 
 end

@@ -4,27 +4,9 @@ describe Fex do
 
   example "rate" do
 
-    client = Fex.client(test_keys)
-    rate = client.rate(
-      web_authentication_detail: {
-        user_credential: {
-          key: key,
-          password: password
-        }
-      },
-      client_detail: {
-        account_number: account_number,
-        meter_number: meter_number
-      },
-      transaction_detail: {
-        customer_transaction_id: "Rate a Single Package v13"
-      },
-      version: {
-        service_id: 'crs',
-        major: 13,
-        intermediate: 0,
-        minor: 0
-      },
+    client = Fex.client(credentials: test_keys["test"])
+    service = client.rate
+    response = service.call(
       requested_shipment: {
         ship_timestamp: Time.now.utc.iso8601(2),
         dropoff_type: "REGULAR_PICKUP",
@@ -79,7 +61,7 @@ describe Fex do
         ]
       }
     )
-    rate.call
+    response.severity.should eq "WARNING"
   end
 
 end
