@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Fex do
+describe Fex, :test_environment do
 
   example "rate" do
 
-    client = Fex.client(credentials: test_keys["test"])
+    client = Fex.client(credentials: credentials, mode: mode)
     service = client.rate
     response = service.call(
       requested_shipment: {

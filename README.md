@@ -119,6 +119,45 @@ severity = response.xpath("//Notifications/Severity").first.inner_text
 all_the_things = response.body
 ```
 
+## Running gem specs
+
+To run the specs on this project, you can create a file called
+`spec/support/credentials.yml`, and fill it with your own test keys.
+
+``` yaml
+production:
+  :key: "xxx"
+  :password: "xxx"
+  :account_number: "xxx"
+  :meter_number: "xxx"
+
+test:
+  :key: "xxx"
+  :password: "xxx"
+  :account_number: "xxx"
+  :meter_number: "xxx"
+```
+
+You can specify production and/or test. The production keys are used for the
+address validation service, because that doesn't work for me on test.
+
+To use the keys in an integration spec, add `:production_environment` or
+`:test_environment` as group metadata keys, and the methods `credentials` and
+`mode` are made available for you:
+
+``` ruby
+describe "Fedex rate service", :test_environment do
+
+  it "should do something" do
+    client = Fex.client(credentials: credentials, mode: mode)
+    # etc ...
+  end
+
+end
+```
+
+If you don't specify keys, these specs will be skipped.
+
 ## Contributing
 
 1. Fork it
