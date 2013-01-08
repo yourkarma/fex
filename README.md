@@ -1,7 +1,22 @@
 # Fex
 
-Small wrapper around Savon for using Fedex Web Services. You will feel all the
-pain of the Fedex API, but you'll be able to do ALL the things.
+Small wrapper around Savon for using FedEx Web Services. It will expose you to
+all the nitty gritty details from the FedEx API.
+
+Disadvantages:
+
+* The FedEx API is big and complex
+* It's not easy to get started
+
+Advantages:
+
+* You can do everything that is allowed by the API.
+* The code is really close to the documentation by FedEx.
+
+It's up to you to decide which approach to take. If you don't do many special
+things, a gem like `fedex`, might be a better alternative, because it hides
+most of the complexity. If you find yourself needing a bit more control, you
+can take this gem.
 
 ## Installation
 
@@ -47,13 +62,13 @@ client = Fex.client(
 Create a service:
 
 ``` ruby
-service = client.ship_service
+service = client.service(:ship)
 ```
 
 Perform a request:
 
 ``` ruby
-response = service.call(
+response = service.call(:process_shipment,
   requested_shipment: {
     ship_timestamp:  Time.now.utc.iso8601(2),
     dropoff_type:    "REGULAR_PICKUP",
@@ -96,6 +111,22 @@ response = service.call(
         residential:             0
       }
     },
+    shipping_charges_payment: {
+      payment_type: "SENDER",
+      payor: {
+        responsible_party: {
+          account_number: credentials[:account_number],
+          contact: ""
+        }
+      }
+    },
+    label_specification: {
+      label_format_type: "COMMON2D",
+      image_type: "PNG",
+      label_stock_type: "PAPER_4X6"
+    },
+    rate_request_types: ["ACCOUNT"],
+    package_count: 1,
     requested_package_line_items: [
       {
         sequence_number:      1,
@@ -115,7 +146,9 @@ Read from the response:
 ``` ruby
 response.success?
 response.soap_fault?
-severity = response.xpath("//Notifications/Severity").first.inner_text
+response.severity
+severity = response.xpath("//Notifications/Severity").inner_text
+severity = response.css("Severity").inner_text
 all_the_things = response.body
 ```
 
@@ -146,7 +179,7 @@ To use the keys in an integration spec, add `:production_environment` or
 `mode` are made available for you:
 
 ``` ruby
-describe "Fedex rate service", :test_environment do
+describe "FedEx rate service", :test_environment do
 
   it "should do something" do
     client = Fex.client(credentials: credentials, mode: mode)

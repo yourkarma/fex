@@ -16,7 +16,7 @@ describe Fex::Service do
     )
     Savon.should_receive(:client).with(wsdl: instance_of(String), convert_request_keys_to: :camelcase, pretty_print_xml: true)
     client.should_receive(:call).with(:address_validation, {:message=>{:default=>"value", :the=>"message"}})
-    service.call(the: "message")
+    service.call(:address_validation, the: "message")
   end
 
 end

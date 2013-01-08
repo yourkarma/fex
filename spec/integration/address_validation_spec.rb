@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Fex, :production_environment do
+describe "Address Validation Services", :production_environment do
 
   example "Address Validation" do
 
-    client = Fex.client(credentials: credentials, mode: mode)
-    service = client.validate_address
-    response = service.call(
+    client = Fex.client(credentials: credentials, mode: mode, client: { logger: logger})
+    service = client.service(:address_validation)
+    response = service.call(:address_validation,
       request_timestamp: Time.now.utc.iso8601(2),
       options: {
         check_residential_status: 1,

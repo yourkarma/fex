@@ -1,7 +1,11 @@
 require "delegate"
+require "forwardable"
 
 module Fex
   class Response < SimpleDelegator
+    extend Forwardable
+
+    def_delegators :doc, :css
 
     def initialize(*)
       super

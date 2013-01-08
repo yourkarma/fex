@@ -1,0 +1,22 @@
+---
+:address_validation:
+  :version:
+    :service_id: aval
+    :major: 2
+    :intermediate: 0
+    :minor: 0
+:rate:
+  :client:
+    :env_namespace: soapenv
+    :namespace_identifier: v13
+  :version:
+    :service_id: crs
+    :major: 13
+    :intermediate: 0
+    :minor: 0
+:ship:
+  :version:
+    :service_id: ship
+    :major: 12
+    :intermediate: 1
+    :minor: 0

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Fex, :test_environment do
+describe "Rate Service", :test_environment do
 
-  example "rate" do
+  example "Get Rates" do
 
-    client = Fex.client(credentials: credentials, mode: mode)
-    service = client.rate
-    response = service.call(
+    client = Fex.client(credentials: credentials, mode: mode, client: { logger: logger })
+    service = client.service(:rate)
+    response = service.call(:get_rates,
       requested_shipment: {
         ship_timestamp: Time.now.utc.iso8601(2),
         dropoff_type: "REGULAR_PICKUP",
