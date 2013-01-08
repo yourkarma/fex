@@ -9,9 +9,9 @@ module Fex
     # credentials
     attr_reader :key, :password, :account_number, :meter_number
 
-    def initialize(options)
-      @name           = options.fetch(:name)
-      @mode           = options.fetch(:mode)
+    def initialize(name, options)
+      @name           = name
+      @mode           = options.fetch(:mode) { "test" }
       @version        = options.fetch(:version)  {{}}
       @client_options = options.fetch(:client)   {{}}
       @defaults       = options.fetch(:defaults) {{}}

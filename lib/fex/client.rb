@@ -12,8 +12,8 @@ module Fex
 
     def service(name, locals = {})
       config = service_configuration[name]
-      opts = globals.deep_merge(name: name).deep_merge(config).deep_merge(locals)
-      ServiceFactory.new(opts).service
+      opts = globals.deep_merge(config).deep_merge(locals)
+      ServiceFactory.new(name, opts).service
     end
 
     private
