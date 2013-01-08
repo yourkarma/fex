@@ -1,12 +1,13 @@
 require "fex/service"
 require "fex/response"
+require "fex/ship_response"
 
 module Fex
   class ServiceFactory
 
     PRODUCTION_ENDPOINT = "https://ws.fedex.com:443/web-services/rate"
 
-    attr_reader :name, :mode, :client_options, :version, :defaults, :wsdl
+    attr_reader :name, :mode, :client_options, :version, :defaults, :wsdl, :response
 
     # credentials
     attr_reader :key, :password, :account_number, :meter_number
@@ -25,6 +26,8 @@ module Fex
       @meter_number   = @credentials.fetch(:meter_number)
 
       @wsdl = options[:wsdl]
+
+      @response = options[:response] || "Response"
     end
 
     def service
@@ -33,7 +36,7 @@ module Fex
         client:     merged_client_options,
         wsdl:       wsdl,
         defaults:   merged_defaults,
-        response:   Response
+        response:   Fex.const_get(response)
       )
     end
 

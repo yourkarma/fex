@@ -82,7 +82,7 @@ describe "Ship Service", :test_environment do
       }
     )
     response.severity.should eq "SUCCESS"
-    # binding.pry
+    response.image.bytesize.should be_within(1024).of(10746)
   end
 
 end
