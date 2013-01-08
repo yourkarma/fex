@@ -4,6 +4,8 @@ require "fex/response"
 module Fex
   class ServiceFactory
 
+    PRODUCTION_ENDPOINT = "https://ws.fedex.com:443/web-services/rate"
+
     attr_reader :name, :mode, :client_options, :version, :defaults, :wsdl
 
     # credentials
@@ -54,7 +56,7 @@ module Fex
 
     def endpoint_options
       if mode.to_s == "production"
-        { endpoint: "https://ws.fedex.com:443/web-services/rate" }
+        { endpoint: PRODUCTION_ENDPOINT }
       else
         {}
       end
