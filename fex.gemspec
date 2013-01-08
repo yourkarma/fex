@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Fex::VERSION
   gem.authors       = ["iain"]
   gem.email         = ["iain@iain.nl"]
-  gem.description   = %q{Small wrapper around Savonfor using Fedex Web Services}
-  gem.summary       = %q{Small wrapper around Savonfor using Fedex Web Services}
+  gem.description   = %q{Small wrapper around Savon for using FedEx Web Services}
+  gem.summary       = %q{Small wrapper around Savon for using FedEx Web Services}
   gem.homepage      = "https://github.com/yourkarma/fex"
 
   gem.files         = `git ls-files`.split($/)
