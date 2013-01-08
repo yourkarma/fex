@@ -18,6 +18,11 @@ things, a gem like `fedex`, might be a better alternative, because it hides
 most of the complexity. If you find yourself needing a bit more control, you
 can take this gem.
 
+Note: This gem is not complete. It contains the ship service, address
+validation and rate service. The other services FedEx supplies are a somewhat
+different. It shouldn't be too difficult to support them, but I haven't gotten
+around to it.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -47,9 +52,11 @@ client = Fex.client(
     account_number:  "xxx",
     meter_number:    "xxx",
   },
-  mode:          "test", # or "production"
 
   # optional:
+  mode: "test", # or "production"
+
+  # see Savon for more information about these
   client: {
     logger:        Rails.logger,
     log_level:     "info",
@@ -63,94 +70,48 @@ Create a service:
 
 ``` ruby
 service = client.service(:ship)
+
+# see what operations are available:
+service.operations # => [ :process_shipment, .... ]
 ```
 
 Perform a request:
 
 ``` ruby
-response = service.call(:process_shipment,
+response = service.call(
+
+  # the operation as mentioned earlier
+  :process_shipment,
+
+  # the attributes (after the Version tag)
   requested_shipment: {
     ship_timestamp:  Time.now.utc.iso8601(2),
     dropoff_type:    "REGULAR_PICKUP",
     service_type:    "PRIORITY_OVERNIGHT",
     packaging_type:  "YOUR_PACKAGING",
-    shipper: {
-      contact: {
-        contact_id:       "SY32030",
-        person_name:      "Sunil Yadav",
-        company_name:     "Syntel Inc",
-        phone_number:     "9545871684",
-        phone_extension:  "020",
-        e_mail_address:   "sunil_yadav3@syntelinc.com"
-      },
-      address: {
-        street_lines:            [ "SHIPPER ADDRESS LINE 1", "SHIPPER ADDRESS LINE 2" ],
-        city:                    "COLORADO SPRINGS",
-        state_or_province_code:  "CO",
-        postal_code:             "80915",
-        urbanization_code:       "CO",
-        country_code:            "US",
-        residential:             0
-      }
-    },
-    recipient: {
-      contact: {
-        person_name:      "Receipient",
-        company_name:     "Receiver Org",
-        phone_number:     "9982145555",
-        phone_extension:  "011",
-        e_mail_address:   "receiver@yahoo.com"
-      },
-      address: {
-        street_lines:            [ "RECIPIENT ADDRESS LINE 1", "RECIPIENT ADDRESS LINE 2" ],
-        city:                    "DENVER",
-        state_or_province_code:  "CO",
-        postal_code:             "80204",
-        urbanization_code:       "CO",
-        country_code:            "US",
-        residential:             0
-      }
-    },
-    shipping_charges_payment: {
-      payment_type: "SENDER",
-      payor: {
-        responsible_party: {
-          account_number: credentials[:account_number],
-          contact: ""
-        }
-      }
-    },
-    label_specification: {
-      label_format_type: "COMMON2D",
-      image_type: "PNG",
-      label_stock_type: "PAPER_4X6"
-    },
-    rate_request_types: ["ACCOUNT"],
-    package_count: 1,
-    requested_package_line_items: [
-      {
-        sequence_number:      1,
-        group_number:         1,
-        group_package_count:  1,
-        weight:     { units: "LB", value: "20.0" },
-        dimensions: { length: 12, width: 12, height: 12, units: "IN" },
-        physical_packaging: "BAG"
-      }
-    ]
+    # etc ...
   }
 )
 ```
 
-Read from the response:
+The response has everything Savon offers, plus some methods specific to FedEx.
 
 ``` ruby
+# From Savon:
 response.success?
 response.soap_fault?
-response.severity
+all_the_things = response.body
 severity = response.xpath("//Notifications/Severity").inner_text
 severity = response.css("Severity").inner_text
-all_the_things = response.body
+
+# From Fex:
+response.severity
+response.code
+response.message
+response.image # only for shipments with labels
 ```
+
+For examples on how to use this gem, visit the `spec/integration` directory.
 
 ## Running gem specs
 
