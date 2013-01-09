@@ -13,7 +13,7 @@ module Fex
     end
 
     def total_net_charge
-      @total_net_charge ||= BigDecimal find_total_net_charge
+      @total_net_charge ||= BigDecimal.new(find_total_net_charge)
     end
 
     def tracking_number

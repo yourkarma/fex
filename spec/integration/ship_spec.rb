@@ -82,6 +82,7 @@ describe "Ship Service", :test_environment do
     )
     response.severity.should eq "SUCCESS"
     response.image.bytesize.should be_within(1024).of(10746)
+    response.total_net_charge.should eq BigDecimal.new("67.65")
   end
 
 end
