@@ -21,3 +21,9 @@
     :major: 12
     :intermediate: 1
     :minor: 0
+:track:
+  :version:
+    :service_id: trck
+    :major: 6
+    :intermediate: 0
+    :minor: 0

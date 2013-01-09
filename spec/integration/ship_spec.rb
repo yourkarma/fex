@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'base64'
 
 describe "Ship Service", :test_environment do
 
