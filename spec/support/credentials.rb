@@ -3,7 +3,11 @@ module Credentials
   FILE = File.expand_path("../credentials.yml", __FILE__)
 
   def self.all
-    YAML.load_file(FILE) if File.exist?(FILE)
+    if File.exist?(FILE)
+      YAML.load_file(FILE)
+    else
+      {}
+    end
   end
 
   module Keys
