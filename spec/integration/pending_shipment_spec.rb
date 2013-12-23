@@ -1,15 +1,13 @@
 require 'spec_helper'
 
-describe "Ship Service", :test_environment do
+describe "Pending Shipment Service", :test_environment do
 
-  example "Process Shipment" do
+  example "Create Pending Shipment Request" do
 
     client = Fex.client(credentials: credentials, mode: mode, client: { logger: logger })
     service = client.service(:ship)
 
-    service.should have(7).operations
-
-    response = service.call(:process_shipment,
+    response = service.call(:create_pending_shipment,
       requested_shipment: {
         ship_timestamp:  Time.now.utc.iso8601(2),
         dropoff_type:    "REGULAR_PICKUP",
@@ -22,7 +20,7 @@ describe "Ship Service", :test_environment do
             company_name:     "Syntel Inc",
             phone_number:     "9545871684",
             phone_extension:  "020",
-            e_mail_address:   "sunil_yadav3@syntelinc.com"
+            e_mail_address:   "you@localhost"
           },
           address: {
             street_lines:            [ "SHIPPER ADDRESS LINE 1", "SHIPPER ADDRESS LINE 2" ],
@@ -40,7 +38,7 @@ describe "Ship Service", :test_environment do
             company_name:     "Receiver Org",
             phone_number:     "9982145555",
             phone_extension:  "011",
-            e_mail_address:   "receiver@yahoo.com"
+            e_mail_address:   "you@localhost"
           },
           address: {
             street_lines:            [ "RECIPIENT ADDRESS LINE 1", "RECIPIENT ADDRESS LINE 2" ],
@@ -53,11 +51,28 @@ describe "Ship Service", :test_environment do
           }
         },
         shipping_charges_payment: {
+          #only SENDER or THIRD_PARTY allowed
           payment_type: "SENDER",
           payor: {
             responsible_party: {
               account_number: credentials[:account_number],
               contact: ""
+            }
+          }
+        },
+        special_services_requested: {
+          special_service_types: ["RETURN_SHIPMENT", "PENDING_SHIPMENT"],
+          return_shipment_detail: {
+            return_type: "PENDING",
+            return_e_mail_detail: {
+              merchant_phone_number: '123 123 123 123'
+            }
+          },
+          pending_shipment_detail: {
+            type: "EMAIL",
+            expiration_date: Date.today,
+            email_label_detail: {
+              notification_e_mail_address: "you@localhost"
             }
           }
         },
@@ -71,18 +86,20 @@ describe "Ship Service", :test_environment do
         requested_package_line_items: [
           {
             sequence_number:      1,
-            group_number:         1,
-            group_package_count:  1,
             weight:     { units: "LB", value: "20.0" },
-            dimensions: { length: 12, width: 12, height: 12, units: "IN" },
-            physical_packaging: "BAG"
+            item_description:
+              "Hotspot",
+            customer_references: {
+              customer_reference_type: "CUSTOMER_REFERENCE",
+              value: "Hotspot"
+            },
           }
-        ]
+        ],
       }
     )
     response.severity.should eq "SUCCESS"
-    response.image.bytesize.should be_within(1024).of(10746)
-    response.total_net_charge.should be > BigDecimal.new("67")
+    response.total_net_charge.should be > BigDecimal.new("67.65")
+    response.email_label_url.should include("https://wwwtest.fedex.com/OnlineLabel/login.do?labelUserCdDesc=SyntelInc&labelPasswordDesc=")
   end
 
 end
