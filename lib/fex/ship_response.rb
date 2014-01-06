@@ -20,6 +20,10 @@ module Fex
       @tracking_number ||= css("TrackingNumber").inner_text
     end
 
+    def email_label_url
+      @email_label_url ||= css("EmailLabelUrl").inner_text
+    end
+
     private
 
     def find_total_net_charge
