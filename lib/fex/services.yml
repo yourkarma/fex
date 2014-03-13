@@ -15,11 +15,14 @@
     :intermediate: 0
     :minor: 0
 :ship:
-  :response: "ShipResponse"
+  :client:
+    :env_namespace: soapenv
+    :namespace_identifier: v13
+#  :response: "ShipResponse"
   :version:
     :service_id: ship
-    :major: 12
-    :intermediate: 1
+    :major: 13
+    :intermediate: 0
     :minor: 0
 :track:
   :version:
