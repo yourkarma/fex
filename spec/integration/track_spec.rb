@@ -18,9 +18,7 @@ describe "Track Service", :test_environment do
       },
       include_detailed_scans: true
     )
-    # We have no tracking number to test, so just verify that we get the right error.
-    response.severity.should eq "ERROR"
-    response.message.should start_with "No information for the following shipments has been received by our system yet."
+    response.severity.should eq "SUCCESS"
   end
 
 end
