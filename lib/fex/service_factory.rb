@@ -5,7 +5,7 @@ require "fex/ship_response"
 module Fex
   class ServiceFactory
 
-    PRODUCTION_ENDPOINT = "https://ws.fedex.com:443/web-services/rate"
+    PRODUCTION_ENDPOINT = "https://ws.fedex.com:443/web-services"
 
     attr_reader :name, :mode, :client_options, :version, :defaults, :wsdl, :response
 
